@@ -7,7 +7,8 @@ on:
 
 jobs:
   build-deploy:
-    runs-on: self-hosted  # WSL에 설치한 self-hosted runner
+    runs-on: self-hosted  # WSL self-hosted runner
+
     steps:
       # 1️⃣ 코드 체크아웃
       - name: Checkout code
@@ -20,23 +21,38 @@ jobs:
           distribution: 'temurin'   # 필수!
           java-version: '17'
 
-      # 3️⃣ Maven 빌드 (테스트는 생략)
-      - name: Build Spring Boot JAR
-        run: ./mvnw clean package -DskipTests
-
-      # 4️⃣ Minikube Docker 환경으로 전환
-      - name: Set Docker environment to Minikube
+      # 3️⃣ Maven 설치 (만약 mvnw가 없으면 시스템 Maven 사용)
+      - name: Ensure Maven installed
         run: |
-          eval $(minikube -p minikube docker-env)
+          if [ ! -f ./mvnw ]; then
+            echo "No Maven Wrapper found, installing system Maven..."
+            sudo apt update
+            sudo apt install -y maven
+          else
+            echo "Maven Wrapper exists, will use ./mvnw"
+          fi
 
-      # 5️⃣ Docker 이미지 빌드
+      # 4️⃣ JAR 빌드
+      - name: Build Spring Boot JAR
+        run: |
+          if [ -f ./mvnw ]; then
+            ./mvnw clean package -DskipTests
+          else
+            mvn clean package -DskipTests
+          fi
+
+      # 5️⃣ Minikube Docker 환경 설정
+      - name: Set Docker environment to Minikube
+        run: eval $(minikube -p minikube docker-env)
+
+      # 6️⃣ Docker 이미지 빌드
       - name: Build Docker Image
         run: docker build -t my-springboot-app:latest .
 
-      # 6️⃣ Kubernetes 배포
+      # 7️⃣ Kubernetes 배포
       - name: Deploy to Minikube
         run: kubectl apply -f k8s/deployment.yaml
 
-      # 7️⃣ 배포 확인
+      # 8️⃣ 배포 확인
       - name: Check Pods
         run: kubectl get pods
