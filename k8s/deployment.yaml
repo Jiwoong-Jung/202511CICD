@@ -15,6 +15,7 @@ spec:
       containers:
         - name: springboot-app
           image: springboot-app:latest
+          imagePullPolicy: Never  # 로컬 이미지만 사용하도록 설정
           ports:
             - containerPort: 8088
 ---
