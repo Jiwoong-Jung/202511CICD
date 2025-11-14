@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-deploy:
-    runs-on: self-hosted   # Minikube가 설치된 self-hosted 러너
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
@@ -24,10 +24,13 @@ jobs:
 
       - name: Build Spring Boot JAR
         run: ./gradlew clean build -x test
-        working-directory: ./   # gradlew와 build.gradle 위치
+        working-directory: ./
 
       - name: Set Docker environment to Minikube
-        run: eval $(minikube -p minikube docker-env)
+        run: |
+          eval $(minikube -p minikube docker-env)
+          docker info
+        shell: bash -l
 
       - name: Build Docker Image
         run: docker build -t spring-security-example:1.0 .
@@ -35,5 +38,11 @@ jobs:
       - name: Apply Kubernetes Deployment & Service
         run: kubectl apply -f k8s/spring-security.yaml
 
+      - name: Wait for Pods to be Ready
+        run: kubectl wait --for=condition=Ready pods -l app=spring-security-example --timeout=120s
+
       - name: Check Pods
         run: kubectl get pods -A
+
+      - name: Test NodePort Service (optional)
+        run: curl http://localhost:30088
