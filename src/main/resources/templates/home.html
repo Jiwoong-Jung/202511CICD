@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>홈</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="jumbotron">
+            <h1 class="display-4">스프링 시큐리티 예제에 오신 것을 환영합니다!</h1>
+            <p class="lead">이 예제는 스프링 시큐리티의 기본적인 기능을 보여줍니다.</p>
+            <hr class="my-4">
+            <p sec:authorize="!isAuthenticated()">
+                로그인하거나 회원가입을 진행해주세요.
+            </p>
+            <p sec:authorize="isAuthenticated()">
+                안녕하세요, <span sec:authentication="name"></span>님!
+            </p>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">인증</h5>
+                        <p class="card-text">사용자 인증과 권한 관리 방법을 배워보세요.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">보안</h5>
+                        <p class="card-text">웹 애플리케이션 보안의 기본 개념을 이해하세요.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">데이터베이스</h5>
+                        <p class="card-text">H2 데이터베이스를 사용한 데이터 관리 방법을 배워보세요.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

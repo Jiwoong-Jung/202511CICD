@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 수정</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="text-center">사용자 수정</h3>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${error}" class="alert alert-danger" role="alert">
+                                <span th:text="${error}"></span>
+                            </div>
+                            <form th:action="@{/admin/users/{id}/edit(id=${user.id})}" method="post">
+                                <div class="form-group">
+                                    <label for="username">사용자명</label>
+                                    <input type="text" class="form-control" id="username" name="username" th:value="${user.username}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">새 비밀번호 (변경하지 않으려면 비워두세요)</label>
+                                    <input type="password" class="form-control" id="password" name="password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="role">권한</label>
+                                    <select class="form-control" id="role" name="role" required>
+                                        <option value="USER" th:selected="${user.role == 'USER'}">일반 사용자</option>
+                                        <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">관리자</option>
+                                    </select>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button type="submit" class="btn btn-primary">수정</button>
+                                    <a th:href="@{/admin/users}" class="btn btn-secondary">취소</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

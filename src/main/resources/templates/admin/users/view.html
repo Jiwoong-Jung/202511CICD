@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 상세 정보</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="text-center">사용자 상세 정보</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>ID</label>
+                                <p class="form-control-static" th:text="${user.id}"></p>
+                            </div>
+                            <div class="form-group">
+                                <label>사용자명</label>
+                                <p class="form-control-static" th:text="${user.username}"></p>
+                            </div>
+                            <div class="form-group">
+                                <label>권한</label>
+                                <p class="form-control-static" th:text="${user.role}"></p>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a th:href="@{/admin/users/{id}/edit(id=${user.id})}" class="btn btn-primary">수정</a>
+                                <a th:href="@{/admin/users}" class="btn btn-secondary">목록으로</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

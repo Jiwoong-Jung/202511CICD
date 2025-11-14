@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 페이지</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="jumbotron">
+            <h1 class="display-4">관리자 페이지</h1>
+            <p class="lead">관리자만 접근할 수 있는 페이지입니다.</p>
+            <hr class="my-4">
+            <p>현재 로그인한 사용자: <span sec:authentication="name"></span></p>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">시스템 정보</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>이 페이지는 관리자 권한이 있는 사용자만 접근할 수 있습니다.</p>
+                        <p>스프링 시큐리티의 권한 기반 접근 제어를 테스트해보세요.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">보안 정보</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>현재 사용자의 권한: <span sec:authentication="principal.authorities"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">관리자 기능</h5>
+                    </div>
+                    <div class="card-body">
+                        <a th:href="@{/admin/users}" class="btn btn-primary">사용자 관리</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
