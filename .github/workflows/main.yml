@@ -1,4 +1,4 @@
-name: CI/CD Deploy to Minikube
+name: CI/CD Spring Boot to Minikube
 
 on:
   push:
@@ -6,53 +6,35 @@ on:
       - main
 
 jobs:
-  build-deploy:
-    runs-on: self-hosted   # Minikube가 설치된 self-hosted 러너
-
+  build-and-deploy:
+    runs-on: ubuntu-latest
     steps:
-      # 1️⃣ 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ JDK 설정
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '17'
 
-      # 3️⃣ Gradle Wrapper 실행 권한 설정
-      - name: Make Gradle Wrapper executable
-        run: chmod +x ./gradlew
+      - name: Build Spring Boot app
+        run: ./mvnw clean package -DskipTests
 
-      # 4️⃣ Spring Boot JAR 빌드
-      - name: Build Spring Boot JAR
-        run: ./gradlew clean build -x test
-        working-directory: ./
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
 
-      # 5️⃣ Minikube Docker 환경 설정 (bash 필요)
-      - name: Set Docker environment to Minikube
+      - name: Configure Docker to use Minikube
         run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          minikube start --driver=docker
           eval $(minikube -p minikube docker-env)
-          docker info
-        shell: bash -l {0}
 
-      # 6️⃣ Docker 이미지 빌드
-      - name: Build Docker Image
-        run: docker build -t spring-security-example:1.0 .
+      - name: Build Docker image
+        run: |
+          docker build -t springboot-app:latest .
 
-      # 7️⃣ Kubernetes Deployment & Service 적용
-      - name: Apply Kubernetes Deployment & Service
-        run: kubectl apply -f k8s/spring-security.yaml
-
-      # 8️⃣ 파드 준비 완료 대기
-      - name: Wait for Pods to be Ready
-        run: kubectl wait --for=condition=Ready pods -l app=spring-security-example --timeout=120s
-
-      # 9️⃣ 파드 상태 확인
-      - name: Check Pods
-        run: kubectl get pods -A
-
-      # 🔟 NodePort 서비스 테스트 (선택)
-      - name: Test NodePort Service
-        run: curl http://localhost:30088
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
