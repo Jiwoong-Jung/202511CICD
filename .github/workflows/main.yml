@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-deploy:
-    runs-on: self-hosted
+    runs-on: self-hosted   # Minikube가 설치된 self-hosted 러너
 
     steps:
       - name: Checkout code
@@ -30,10 +30,10 @@ jobs:
         run: eval $(minikube -p minikube docker-env)
 
       - name: Build Docker Image
-        run: docker build -t my-springboot-app:latest .
+        run: docker build -t spring-security-example:1.0 .
 
-      - name: Deploy to Minikube
-        run: kubectl apply -f k8s/deployment.yaml
+      - name: Apply Kubernetes Deployment & Service
+        run: kubectl apply -f k8s/spring-security.yaml
 
       - name: Check Pods
-        run: kubectl get pods
+        run: kubectl get pods -A
