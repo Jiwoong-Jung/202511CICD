@@ -21,9 +21,9 @@ jobs:
           distribution: 'temurin'  # 필수
           java-version: '17'
 
-      # 3. Spring Boot 빌드
-      - name: Build Spring Boot app
-        run: ./mvnw clean package -DskipTests
+      # 3. Gradle 빌드
+      - name: Build Spring Boot app using Gradle
+        run: ./gradlew clean build -x test  # -x test 옵션으로 테스트 제외
 
       # 4. Docker 환경 확인
       - name: Set up Docker Buildx
@@ -46,4 +46,3 @@ jobs:
       - name: Deploy to Minikube
         run: |
           kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
