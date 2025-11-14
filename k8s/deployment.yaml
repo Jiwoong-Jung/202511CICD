@@ -1,26 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spring-security-example
-  labels:
-    app: spring-security-example
+  name: springboot-app
 spec:
-  replicas: 3 
+  replicas: 1
   selector:
     matchLabels:
-      app: spring-security-example
+      app: springboot-app
   template:
     metadata:
       labels:
-        app: spring-security-example
+        app: springboot-app
     spec:
       containers:
-        - name: spring-security-example
-          image: spring-security-example:1.0   # 로컬에서 빌드한 이미지 이름
-          imagePullPolicy: Never               # Docker Hub에서 가져오지 않도록 설정
+        - name: springboot-app
+          image: springboot-app:latest
           ports:
             - containerPort: 8088
-          env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: default
-
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-app-service
+spec:
+  selector:
+    app: springboot-app
+  ports:
+    - protocol: TCP
+      port: 8088
+      targetPort: 8088
+  type: NodePort
