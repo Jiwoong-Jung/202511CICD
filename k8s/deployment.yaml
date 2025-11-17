@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: springboot-app
-          image: your-dockerhub-username/springboot-app:latest  # 레지스트리 이미지
-          imagePullPolicy: Always  # 수정됨
+          image: springboot-app:latest
+          imagePullPolicy: Never  # Minikube 로컬 이미지 사용
           ports:
             - containerPort: 8088
 ---
