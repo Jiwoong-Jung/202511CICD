@@ -37,8 +37,8 @@ jobs:
         run: |
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          sudo minikube start --driver=docker
-          sudo eval $(minikube -p minikube docker-env)  # Minikube Docker 환경으로 설정
+          minikube start --driver=docker
+          eval $(minikube -p minikube docker-env)  # Minikube Docker 환경으로 설정
 
       # 7. Docker 이미지 빌드
       - name: Build Docker image
