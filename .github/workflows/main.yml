@@ -37,15 +37,15 @@ jobs:
         run: |
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          minikube start --driver=docker
-          eval $(minikube -p minikube docker-env)  # Minikube Docker 환경으로 설정
+          sudo minikube start --driver=docker
+          sudo eval $(minikube -p minikube docker-env)  # Minikube Docker 환경으로 설정
 
       # 7. Docker 이미지 빌드
       - name: Build Docker image
         run: |
-          docker build -t springboot-app:latest .
+          sudo docker build -t springboot-app:latest .
 
       # 8. Kubernetes 배포
       - name: Deploy to Minikube
         run: |
-          kubectl apply -f k8s/deployment.yaml
+          sudo kubectl apply -f k8s/deployment.yaml
