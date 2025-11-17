@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: springboot-app
-          image: springboot-app:latest
-          imagePullPolicy: Never  # 로컬 이미지만 사용하도록 설정
+          image: your-dockerhub-username/springboot-app:latest  # 레지스트리 이미지
+          imagePullPolicy: Always  # 수정됨
           ports:
             - containerPort: 8088
 ---
